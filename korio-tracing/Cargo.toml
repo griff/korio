@@ -1,0 +1,11 @@
+[package]
+name = "korio-tracing"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[dependencies]
+korio-core.path = "../korio-core"
+korio-subscriber.path = "../korio-subscriber"
+tracing = "*"
+tracing-subscriber = "*"

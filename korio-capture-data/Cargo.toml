@@ -1,0 +1,13 @@
+[package]
+name = "korio-capture-data"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[dependencies]
+futures-sink.workspace = true
+korio.workspace = true
+korio-capture.workspace = true
+korio-data.workspace = true
+korio-subscriber.workspace = true
+tracing.workspace = true

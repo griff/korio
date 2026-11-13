@@ -1,0 +1,15 @@
+[package]
+name = "korio-core"
+edition = "2024"
+version = "0.1.0"
+
+[features]
+serde = ["serde/derive", "smol_str/serde"]
+valuable = ["dep:valuable"]
+
+[dependencies]
+auto_impl.workspace = true
+num_enum.workspace = true
+serde = { workspace = true, optional = true }
+smol_str.workspace = true
+valuable = { workspace = true, optional = true }

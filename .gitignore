@@ -1,0 +1,10 @@
+/target
+/.direnv
+/.lsp/
+/.vscode/
+target
+.DS_Store
+
+# Ignore Nix result symlinks
+result
+result-*

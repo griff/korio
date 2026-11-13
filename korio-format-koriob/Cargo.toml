@@ -1,0 +1,5 @@
+[package]
+name = "korio-format-koriob"
+edition = "2024"
+version = "0.1.0"
+

@@ -1,0 +1,16 @@
+[package]
+name = "korio-subscriber"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[features]
+smallvec = ["dep:smallvec"]
+
+[dependencies]
+korio-core.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+smallvec = { workspace = true, optional = true }
+thread_local.workspace = true
+tracing.workspace = true

@@ -1,0 +1,20 @@
+[package]
+name = "korio-format-koriosj"
+edition = "2024"
+version = "0.1.0"
+
+[features]
+blocking = []
+
+[dependencies]
+futures-channel.workspace = true
+futures-util = { workspace = true, features = ["sink"] }
+korio-capture-data.workspace = true
+korio-data = { workspace = true, features = ["serde"] }
+korio-format.workspace = true
+pin-project-lite.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["io-util"] }
+tokio-util = { workspace = true, features = ["codec"] }
+serde.workspace = true
+serde_json.workspace = true

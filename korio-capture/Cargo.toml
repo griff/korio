@@ -1,0 +1,12 @@
+[package]
+name = "korio-capture"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[dependencies]
+futures-channel.workspace = true
+korio.workspace = true
+korio-subscriber.workspace = true
+parking_lot.workspace = true
+tracing.workspace = true

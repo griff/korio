@@ -1,0 +1,12 @@
+[package]
+name = "korio-data"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[features]
+serde = ["serde/derive", "korio-core/serde"]
+
+[dependencies]
+korio-core.path = "../korio-core"
+serde = { workspace = true, optional = true }

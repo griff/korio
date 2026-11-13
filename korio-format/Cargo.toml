@@ -1,0 +1,10 @@
+[package]
+name = "korio-format"
+edition = "2024"
+version = "0.1.0"
+
+[dependencies]
+futures-core.workspace = true
+futures-sink.workspace = true
+pin-project-lite.workspace = true
+serde.workspace = true

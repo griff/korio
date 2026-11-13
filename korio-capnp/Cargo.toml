@@ -1,0 +1,32 @@
+[package]
+name = "korio-capnp"
+version = "0.1.0"
+edition = "2024"
+rust-version.workspace = true
+
+[features]
+internal-logs = []
+
+[dependencies]
+byteorder.workspace = true
+capnp.workspace = true
+capnp-futures.workspace = true
+capnp-rpc.workspace = true
+capnp-convert.workspace = true
+futures-channel.workspace = true
+futures-util.workspace = true
+korio.workspace = true
+korio-capture.workspace = true
+korio-capture-data.workspace = true
+korio-data.workspace = true
+korio-subscriber.workspace = true
+#nixrs-telemetry2.path = "../core2"
+#pin-project-lite.workspace = true
+#tokio-util = { workspace = true, features = ["compat"] }
+tokio = { workspace = true, features = ["rt"] }
+tracing.workspace = true
+#tracing-subscriber.workspace = true
+
+[build-dependencies]
+capnpc.workspace = true
+#which.workspace = true

@@ -1,0 +1,21 @@
+[package]
+name = "korio-format-koriosc"
+edition = "2024"
+version = "0.1.0"
+
+[dependencies]
+capnp.workspace = true
+capnp-convert.workspace = true
+capnp-futures.workspace = true
+futures-channel.workspace = true
+futures-util.workspace = true
+korio-capnp.workspace = true
+korio-data.workspace = true
+korio-format.workspace = true
+tokio.workspace = true
+tokio-util = { workspace = true, features = ["compat"] }
+tracing.workspace = true
+
+[build-dependencies]
+capnpc.workspace = true
+which.workspace = true
