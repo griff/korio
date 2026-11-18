@@ -3,7 +3,7 @@ use std::{
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
-use capnp_convert::{BuildFrom, ReadFrom, ReadInto, SetInto};
+use capnp_convert::{ReadFrom, ReadInto, SetFrom, SetInto};
 use korio_format::{OpenTimeRange, TimedEvent, TimedRange, TimedStreamHeader, time::UnixTimeNano};
 
 use crate::capnp::koriosc_capnp::{
@@ -15,7 +15,7 @@ impl SetInto<timed_stream_header::Builder<'_>> for TimedStreamHeader {
         builder
             .reborrow()
             .init_time_range()
-            .build_from(&self.time_range)?;
+            .set_from(&self.time_range)?;
         Ok(())
     }
 }
@@ -35,7 +35,7 @@ where
     fn set_into(&self, builder: &mut timed_event::Builder<'_, Event>) -> capnp::Result<()> {
         let ts: UnixTimeNano = self.timestamp.into();
         builder.set_timestamp(ts.as_nanos_since_epoch());
-        builder.reborrow().init_event().build_from(&self.event)?;
+        builder.reborrow().init_event().set_from(&self.event)?;
         Ok(())
     }
 }
@@ -61,8 +61,8 @@ where
     for<'b> E: SetInto<Event::Builder<'b>>,
 {
     fn set_into(&self, builder: &mut timed_range::Builder<'_, Event>) -> capnp::Result<()> {
-        builder.reborrow().init_range().build_from(&self.range)?;
-        builder.reborrow().init_event().build_from(&self.event)?;
+        builder.reborrow().init_range().set_from(&self.range)?;
+        builder.reborrow().init_event().set_from(&self.event)?;
         Ok(())
     }
 }

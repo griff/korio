@@ -1,5 +1,5 @@
 use capnp::capability::{Client, FromClientHook, Promise, Rc};
-use capnp_convert::{BuildFrom as _, ReadInto};
+use capnp_convert::{ReadInto, SetFrom as _};
 use capnp_rpc::pry;
 use futures_channel::mpsc;
 use futures_util::StreamExt as _;
@@ -57,7 +57,7 @@ async fn try_run_capture(
     while let Some(event) = receiver.next().await {
         let mut req = client.events_request();
         let b = req.get();
-        b.init_events(1).get(0).build_from(&event)?;
+        b.init_events(1).get(0).set_from(&event)?;
         req.send().await?;
     }
     client.completed_request().send().promise.await?;

@@ -1,4 +1,4 @@
-use capnp_convert::{BuildFrom, ReadFrom, ReadInto, SetInto};
+use capnp_convert::{ReadFrom, ReadInto, SetFrom, SetInto};
 use korio::Severity;
 use korio::metadata::{AnyValue, Key, KeyBuf, KeyValue};
 
@@ -71,7 +71,7 @@ impl From<Severity> for common_capnp::Severity {
 impl SetInto<common_capnp::key_value::Builder<'_>> for (&Key, &AnyValue) {
     fn set_into(&self, builder: &mut common_capnp::key_value::Builder<'_>) -> capnp::Result<()> {
         builder.set_key(self.0.as_str());
-        builder.reborrow().init_value().build_from(self.1)?;
+        builder.reborrow().init_value().set_from(self.1)?;
         Ok(())
     }
 }
@@ -106,12 +106,12 @@ impl SetInto<common_capnp::any_value::Builder<'_>> for AnyValue {
             AnyValue::U16(value) => builder.reborrow().set_uint16_value(*value),
             AnyValue::U32(value) => builder.reborrow().set_uint32_value(*value),
             AnyValue::U64(value) => builder.reborrow().set_uint64_value(*value),
-            AnyValue::U128(value) => builder.reborrow().init_uint128_value().build_from(value)?,
+            AnyValue::U128(value) => builder.reborrow().init_uint128_value().set_from(value)?,
             AnyValue::I8(value) => builder.reborrow().set_int8_value(*value),
             AnyValue::I16(value) => builder.reborrow().set_int16_value(*value),
             AnyValue::I32(value) => builder.reborrow().set_int32_value(*value),
             AnyValue::I64(value) => builder.reborrow().set_int64_value(*value),
-            AnyValue::I128(value) => builder.reborrow().init_int128_value().build_from(value)?,
+            AnyValue::I128(value) => builder.reborrow().init_int128_value().set_from(value)?,
             AnyValue::F32(value) => builder.reborrow().set_float32_value(*value),
             AnyValue::F64(value) => builder.reborrow().set_float64_value(*value),
             AnyValue::String(value) => builder.reborrow().set_string_value(value),
@@ -119,13 +119,13 @@ impl SetInto<common_capnp::any_value::Builder<'_>> for AnyValue {
             AnyValue::Array(values) => {
                 let mut b = builder.reborrow().init_array_value(values.len() as u32);
                 for (index, value) in values.iter().enumerate() {
-                    b.reborrow().get(index as u32).build_from(value)?;
+                    b.reborrow().get(index as u32).set_from(value)?;
                 }
             }
             AnyValue::Map(values) => {
                 let mut b = builder.reborrow().init_kvlist_value(values.len() as u32);
                 for (index, value) in values.iter().enumerate() {
-                    b.reborrow().get(index as u32).build_from(value)?;
+                    b.reborrow().get(index as u32).set_from(value)?;
                 }
             }
         }

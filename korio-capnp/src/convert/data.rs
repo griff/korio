@@ -4,7 +4,7 @@ use std::{
     time::{Duration, UNIX_EPOCH},
 };
 
-use capnp_convert::{BuildFrom as _, ReadFrom, ReadInto as _, SetInto};
+use capnp_convert::{ReadFrom, ReadInto as _, SetFrom as _, SetInto};
 use korio::{
     Severity,
     span::{Id, SpanId},
@@ -25,10 +25,7 @@ use crate::capnp::{
 impl SetInto<event_capnp::event::Builder<'_>> for Event {
     fn set_into(&self, builder: &mut event_capnp::event::Builder<'_>) -> capnp::Result<()> {
         if let Some(id) = self.span.as_ref() {
-            builder
-                .reborrow()
-                .init_trace_id()
-                .build_from(&id.trace_id)?;
+            builder.reborrow().init_trace_id().set_from(&id.trace_id)?;
             builder.set_span_id(id.span_id.into_u64());
         }
 
@@ -40,7 +37,7 @@ impl SetInto<event_capnp::event::Builder<'_>> for Event {
         builder.set_target(&self.target);
 
         if let Some(body) = self.body() {
-            builder.reborrow().init_body().build_from(body)?;
+            builder.reborrow().init_body().set_from(body)?;
         }
 
         builder.set_severity_number(self.severity_number.into());
@@ -50,7 +47,7 @@ impl SetInto<event_capnp::event::Builder<'_>> for Event {
             .reborrow()
             .init_attributes(self.attributes().len() as u32);
         for (index, kv) in self.attributes().enumerate() {
-            attrs.reborrow().get(index as u32).build_from(&kv)?;
+            attrs.reborrow().get(index as u32).set_from(&kv)?;
         }
         Ok(())
     }
@@ -110,7 +107,7 @@ impl SetInto<span_record::Builder<'_>> for SpanRecord {
         builder
             .reborrow()
             .init_trace_id()
-            .build_from(&self.id.trace_id)?;
+            .set_from(&self.id.trace_id)?;
         builder.set_span_id(self.id.span_id.into_u64());
         builder.set_observed_time_unix_nano(
             UnixTimeNano::from(self.observed_timestamp).as_nanos_since_epoch(),
@@ -120,7 +117,7 @@ impl SetInto<span_record::Builder<'_>> for SpanRecord {
             .reborrow()
             .init_attributes(self.attributes.len() as u32);
         for (index, kv) in self.attributes.iter().enumerate() {
-            attrs.reborrow().get(index as u32).build_from(&kv)?;
+            attrs.reborrow().get(index as u32).set_from(&kv)?;
         }
         Ok(())
     }
@@ -158,15 +155,13 @@ impl ReadFrom<span_record::Reader<'_>> for SpanRecord {
 impl SetInto<span_follows_from::Builder<'_>> for SpanFollowsFrom {
     fn set_into(&self, builder: &mut span_follows_from::Builder<'_>) -> capnp::Result<()> {
         let mut id = builder.reborrow().init_id();
-        id.reborrow()
-            .init_trace_id()
-            .build_from(&self.id.trace_id)?;
+        id.reborrow().init_trace_id().set_from(&self.id.trace_id)?;
         id.set_span_id(self.id.span_id.into_u64());
         let mut follows = builder.reborrow().init_follows();
         follows
             .reborrow()
             .init_trace_id()
-            .build_from(&self.from.trace_id)?;
+            .set_from(&self.from.trace_id)?;
         follows.set_span_id(self.from.span_id.into_u64());
         builder.set_observed_time_unix_nano(
             UnixTimeNano::from(self.observed_timestamp).as_nanos_since_epoch(),
@@ -176,7 +171,7 @@ impl SetInto<span_follows_from::Builder<'_>> for SpanFollowsFrom {
             .reborrow()
             .init_attributes(self.attributes.len() as u32);
         for (index, kv) in self.attributes.iter().enumerate() {
-            attrs.reborrow().get(index as u32).build_from(&kv)?;
+            attrs.reborrow().get(index as u32).set_from(&kv)?;
         }
         Ok(())
     }
@@ -228,7 +223,7 @@ impl SetInto<span::Builder<'_>> for StartedSpan {
         builder
             .reborrow()
             .init_trace_id()
-            .build_from(&self.id.trace_id)?;
+            .set_from(&self.id.trace_id)?;
         builder.set_span_id(self.id.span_id.into_u64());
 
         if let Some(parent_id) = self.parent_id.as_ref() {
@@ -247,7 +242,7 @@ impl SetInto<span::Builder<'_>> for StartedSpan {
             .reborrow()
             .init_attributes(self.attributes.len() as u32);
         for (index, kv) in self.attributes.iter().enumerate() {
-            attrs.reborrow().get(index as u32).build_from(&kv)?;
+            attrs.reborrow().get(index as u32).set_from(&kv)?;
         }
         Ok(())
     }
@@ -307,7 +302,7 @@ impl SetInto<span::Builder<'_>> for EndedSpan {
         builder
             .reborrow()
             .init_trace_id()
-            .build_from(&self.id.trace_id)?;
+            .set_from(&self.id.trace_id)?;
         builder.set_span_id(self.id.span_id.into_u64());
 
         if let Some(parent_id) = self.parent_id.as_ref() {
@@ -328,7 +323,7 @@ impl SetInto<span::Builder<'_>> for EndedSpan {
             .reborrow()
             .init_attributes(self.attributes.len() as u32);
         for (index, kv) in self.attributes.iter().enumerate() {
-            attrs.reborrow().get(index as u32).build_from(&kv)?;
+            attrs.reborrow().get(index as u32).set_from(&kv)?;
         }
         Ok(())
     }
@@ -389,25 +384,25 @@ impl SetInto<telemetry_event::Builder<'_>> for TelemetryEvent {
     fn set_into(&self, builder: &mut telemetry_event::Builder<'_>) -> capnp::Result<()> {
         match self {
             TelemetryEvent::SpanStart(span) => {
-                builder.reborrow().init_span_start().build_from(span)?;
+                builder.reborrow().init_span_start().set_from(span)?;
             }
             TelemetryEvent::SpanRecord(record) => {
-                builder.reborrow().init_span_record().build_from(record)?;
+                builder.reborrow().init_span_record().set_from(record)?;
             }
             TelemetryEvent::SpanRecordFollowsFrom(record) => {
                 builder
                     .reborrow()
                     .init_span_record_follows_from()
-                    .build_from(record)?;
+                    .set_from(record)?;
             }
             TelemetryEvent::SpanClose { id, end_time } => {
                 let mut b = builder.reborrow().init_span_close();
-                b.reborrow().init_trace_id().build_from(&id.trace_id)?;
+                b.reborrow().init_trace_id().set_from(&id.trace_id)?;
                 b.set_span_id(id.span_id.into_u64());
                 b.set_end_time_unix_nano(UnixTimeNano::from(*end_time).as_nanos_since_epoch());
             }
             TelemetryEvent::Event(event) => {
-                builder.reborrow().init_event().build_from(event)?;
+                builder.reborrow().init_event().set_from(event)?;
             }
         }
         Ok(())

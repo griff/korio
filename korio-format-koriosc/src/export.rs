@@ -1,7 +1,7 @@
 use std::pin::pin;
 
 use capnp::message;
-use capnp_convert::BuildFrom as _;
+use capnp_convert::SetFrom as _;
 use capnp_futures::serialize::write_message;
 use futures_util::{AsyncWriteExt, Stream, TryStreamExt as _};
 use korio_capnp::capnp::capture_capnp;
@@ -26,7 +26,7 @@ where
     {
         let mut builder = message::Builder::new(&mut allocator);
         let mut b: timed_stream_header::Builder = builder.init_root();
-        b.build_from(stream.get_header())?;
+        b.set_from(stream.get_header())?;
         write_message(&mut writer, builder).await?;
         writer.flush().await?;
     }
@@ -35,7 +35,7 @@ where
         let mut builder = message::Builder::new(&mut allocator);
         let mut b: timed_event::Builder<'_, capture_capnp::telemetry_event::Owned> =
             builder.init_root();
-        b.build_from(&event)?;
+        b.set_from(&event)?;
         write_message(&mut writer, builder).await?;
     }
     Ok(())
